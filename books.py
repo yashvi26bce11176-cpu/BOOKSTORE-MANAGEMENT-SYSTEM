@@ -5,6 +5,7 @@ from validation import validate_nonempty, validate_int, validate_float
 
 # Add a new book to the bookstore
 def add_book():
+    """Add a new book to the database."""
     # Connect to the database
     connection = connect_db()
 
