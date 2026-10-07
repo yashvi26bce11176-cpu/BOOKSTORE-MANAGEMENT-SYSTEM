@@ -1,6 +1,8 @@
+```python
 import mysql.connector
 
 
+# Connect to the MySQL bookstore database
 def connect_db():
     return mysql.connector.connect(
         host="localhost",
@@ -10,8 +12,11 @@ def connect_db():
     )
 
 
+# Check whether the database connection can be established
 def initialize_database():
     connection = connect_db()
 
+    # Close the connection after checking it
     if connection:
         connection.close()
+```
