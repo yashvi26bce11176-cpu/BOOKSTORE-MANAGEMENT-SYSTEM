@@ -5,6 +5,7 @@ from validation import validate_nonempty
 
 # Add a new customer to the database
 def add_customer():
+    """Add a new customer to the database."""
     # Connect to the database
     connection = connect_db()
 
@@ -62,6 +63,7 @@ def add_customer():
 
 # Update the details of an existing customer
 def update_customer():
+    """Update the details of an existing customer."""
     # Connect to the database
     connection = connect_db()
 
@@ -126,6 +128,7 @@ def update_customer():
 
 # Delete a customer from the database
 def delete_customer():
+    """Delete a customer from the database."""
     # Connect to the database
     connection = connect_db()
 
@@ -167,6 +170,7 @@ def delete_customer():
 
 # Search for a customer using their name or ID
 def search_customer():
+    """Search for a customer using their name or ID."""
     # Connect to the database
     connection = connect_db()
 
@@ -219,6 +223,7 @@ def search_customer():
 
 # Display all customers stored in the database
 def display_customers():
+    """Display all customers stored in the database."""
     # Connect to the database
     connection = connect_db()
 
