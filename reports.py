@@ -1,7 +1,10 @@
+```python
 from database import connect_db
 
 
+# Generate a report showing the current inventory
 def inventory_report():
+    # Connect to the database
     connection = connect_db()
 
     if not connection:
@@ -9,6 +12,7 @@ def inventory_report():
 
     cursor = connection.cursor()
 
+    # Calculate total book titles, total quantity and inventory value
     cursor.execute("""
         SELECT
             COUNT(*),
@@ -28,7 +32,9 @@ def inventory_report():
     connection.close()
 
 
+# Generate a report of books with low stock
 def low_stock_report():
+    # Connect to the database
     connection = connect_db()
 
     if not connection:
@@ -36,6 +42,7 @@ def low_stock_report():
 
     cursor = connection.cursor()
 
+    # Find books having 3 or fewer copies available
     cursor.execute("""
         SELECT book_id, book_name, quantity
         FROM books
@@ -51,6 +58,7 @@ def low_stock_report():
         print("No books are currently low in stock.")
 
     else:
+        # Display each low-stock book
         for row in rows:
             print(
                 f"ID: {row[0]} | "
@@ -62,7 +70,9 @@ def low_stock_report():
     connection.close()
 
 
+# Generate a report showing overall sales information
 def sales_report():
+    # Connect to the database
     connection = connect_db()
 
     if not connection:
@@ -70,6 +80,7 @@ def sales_report():
 
     cursor = connection.cursor()
 
+    # Calculate total transactions, books sold and revenue
     cursor.execute("""
         SELECT
             COUNT(*),
@@ -89,68 +100,8 @@ def sales_report():
     connection.close()
 
 
+# Display books according to the number of copies sold
 def best_selling_books():
-    connection = connect_db()
-
-    if not connection:
-        return
-
-    cursor = connection.cursor()
-
-    cursor.execute("""
-        SELECT
-            b.book_name,
-            SUM(s.quantity) AS total_sold
-        FROM sales s
-        JOIN books b
-            ON s.book_id = b.book_id
-        GROUP BY b.book_id, b.book_name
-        ORDER BY total_sold DESC
-    """)
-
-    rows = cursor.fetchall()
-
-    print("\n===== BEST SELLING BOOKS =====")
-
-    if not rows:
-        print("No sales available.")
-
-    else:
-        for index, row in enumerate(rows, start=1):
-            print(
-                f"{index}. {row[0]} - "
-                f"{row[1]} copies sold"
-            )
-
-    cursor.close()
-    connection.close()
-
-
-def reports_menu():
-    while True:
-        print("\n===== REPORTS =====")
-        print("1. Inventory Report")
-        print("2. Low Stock Report")
-        print("3. Sales Report")
-        print("4. Best Selling Books")
-        print("5. Back")
-
-        choice = input("Enter choice: ")
-
-        if choice == "1":
-            inventory_report()
-
-        elif choice == "2":
-            low_stock_report()
-
-        elif choice == "3":
-            sales_report()
-
-        elif choice == "4":
-            best_selling_books()
-
-        elif choice == "5":
-            break
-
-        else:
-            print("Invalid choice.")
+    # Connect to the database
+    connection
+```
