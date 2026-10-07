@@ -4,6 +4,7 @@ from database import connect_db
 
 # Generate a report showing the current inventory
 def inventory_report():
+    """Generate a report showing current inventory details."""
     # Connect to the database
     connection = connect_db()
 
