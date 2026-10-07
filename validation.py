@@ -1,6 +1,7 @@
 ```python
 # Check that the input is not empty
 def validate_nonempty(value, field_name):
+    """Check that the given input is not empty."""
     while not value.strip():
         print(field_name, "cannot be empty.")
         value = input("Enter " + field_name + ": ")
