@@ -5,6 +5,7 @@ from sales import sales_menu
 from reports import reports_menu
 
 def main():
+    """Run the main menu of the bookstore management system."""
     # Initialize the bookstore database
     initialize_database()
 
