@@ -1,8 +1,11 @@
+```python
 from database import connect_db
 from validation import validate_nonempty
 
 
+# Add a new customer to the database
 def add_customer():
+    # Connect to the database
     connection = connect_db()
 
     if not connection:
@@ -10,11 +13,13 @@ def add_customer():
 
     cursor = connection.cursor()
 
+    # Get and validate the Customer ID
     customer_id = validate_nonempty(
         input("Enter Customer ID: "),
         "Customer ID"
     )
 
+    # Check whether the Customer ID already exists
     cursor.execute(
         "SELECT customer_id FROM customers WHERE customer_id = %s",
         (customer_id,)
@@ -26,6 +31,7 @@ def add_customer():
         connection.close()
         return
 
+    # Get customer details
     name = validate_nonempty(
         input("Enter Customer Name: "),
         "Customer Name"
@@ -34,6 +40,7 @@ def add_customer():
     phone = input("Enter Phone Number: ")
     email = input("Enter Email: ")
 
+    # SQL query to insert the new customer
     query = """
         INSERT INTO customers
         (customer_id, customer_name, phone, email)
@@ -53,7 +60,9 @@ def add_customer():
     connection.close()
 
 
+# Update the details of an existing customer
 def update_customer():
+    # Connect to the database
     connection = connect_db()
 
     if not connection:
@@ -63,6 +72,7 @@ def update_customer():
 
     customer_id = input("Enter Customer ID: ")
 
+    # Check whether the customer exists
     cursor.execute(
         "SELECT * FROM customers WHERE customer_id = %s",
         (customer_id,)
@@ -74,12 +84,14 @@ def update_customer():
         connection.close()
         return
 
+    # Display the fields that can be updated
     print("\n1. Name")
     print("2. Phone")
     print("3. Email")
 
     choice = input("Enter choice: ")
 
+    # Select the field based on the user's choice
     if choice == "1":
         field = "customer_name"
         value = input("Enter new name: ")
@@ -98,6 +110,7 @@ def update_customer():
         connection.close()
         return
 
+    # Update the selected customer field
     cursor.execute(
         f"UPDATE customers SET {field} = %s WHERE customer_id = %s",
         (value, customer_id)
@@ -111,7 +124,9 @@ def update_customer():
     connection.close()
 
 
+# Delete a customer from the database
 def delete_customer():
+    # Connect to the database
     connection = connect_db()
 
     if not connection:
@@ -121,6 +136,7 @@ def delete_customer():
 
     customer_id = input("Enter Customer ID: ")
 
+    # Find the customer before deleting
     cursor.execute(
         "SELECT customer_name FROM customers WHERE customer_id = %s",
         (customer_id,)
@@ -131,6 +147,7 @@ def delete_customer():
     if not result:
         print("Customer not found.")
     else:
+        # Ask the user to confirm deletion
         confirm = input(
             f"Delete customer '{result[0]}'? (y/n): "
         )
@@ -148,7 +165,9 @@ def delete_customer():
     connection.close()
 
 
+# Search for a customer using their name or ID
 def search_customer():
+    # Connect to the database
     connection = connect_db()
 
     if not connection:
@@ -158,6 +177,7 @@ def search_customer():
 
     value = input("Enter customer name or ID: ")
 
+    # Search using either Customer ID or Customer Name
     query = """
         SELECT * FROM customers
         WHERE customer_id = %s
@@ -169,11 +189,13 @@ def search_customer():
         (value, "%" + value + "%")
     )
 
+    # Get all matching customers
     rows = cursor.fetchall()
 
     if not rows:
         print("No customer found.")
     else:
+        # Display the search results in a formatted table
         print("\n" + "-" * 70)
         print(
             f"{'ID':<12}"
@@ -195,7 +217,9 @@ def search_customer():
     connection.close()
 
 
+# Display all customers stored in the database
 def display_customers():
+    # Connect to the database
     connection = connect_db()
 
     if not connection:
@@ -203,6 +227,7 @@ def display_customers():
 
     cursor = connection.cursor()
 
+    # Retrieve all customers in Customer ID order
     cursor.execute(
         "SELECT * FROM customers ORDER BY customer_id"
     )
@@ -212,6 +237,7 @@ def display_customers():
     if not rows:
         print("No customers found.")
     else:
+        # Display each customer's information
         for row in rows:
             print(
                 f"ID: {row[0]} | "
@@ -224,6 +250,7 @@ def display_customers():
     connection.close()
 
 
+# Display the Customer Management menu
 def customer_menu():
     while True:
         print("\n===== CUSTOMER MANAGEMENT =====")
@@ -236,6 +263,7 @@ def customer_menu():
 
         choice = input("Enter choice: ")
 
+        # Call the function according to the user's choice
         if choice == "1":
             add_customer()
 
@@ -251,8 +279,10 @@ def customer_menu():
         elif choice == "5":
             display_customers()
 
+        # Return to the main menu
         elif choice == "6":
             break
 
         else:
             print("Invalid choice.")
+```
