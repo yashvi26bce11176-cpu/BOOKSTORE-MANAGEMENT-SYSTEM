@@ -4,6 +4,7 @@ import mysql.connector
 
 # Connect to the MySQL bookstore database
 def connect_db():
+    """Connect to the MySQL bookstore database."""
     return mysql.connector.connect(
         host="localhost",
         user="root",
