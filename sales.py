@@ -1,7 +1,10 @@
+```python
 from database import connect_db
 
 
+# Make a new sale and generate the bill
 def make_sale():
+    # Connect to the database
     connection = connect_db()
 
     if not connection:
@@ -9,8 +12,10 @@ def make_sale():
 
     cursor = connection.cursor()
 
+    # Get the Customer ID
     customer_id = input("Enter Customer ID: ")
 
+    # Check whether the customer exists
     cursor.execute(
         "SELECT customer_name FROM customers WHERE customer_id = %s",
         (customer_id,)
@@ -24,8 +29,10 @@ def make_sale():
         connection.close()
         return
 
+    # Get the Book ID
     book_id = input("Enter Book ID: ")
 
+    # Find the book details and available stock
     cursor.execute(
         """
         SELECT book_name, price, quantity
@@ -45,10 +52,12 @@ def make_sale():
 
     book_name, price, stock = book
 
+    # Display the selected book details
     print("\nBook:", book_name)
     print("Price:", float(price))
     print("Available stock:", stock)
 
+    # Get and validate the quantity to be sold
     try:
         quantity = int(input("Enter quantity: "))
 
@@ -64,14 +73,17 @@ def make_sale():
         connection.close()
         return
 
+    # Check whether enough books are available
     if quantity > stock:
         print("Insufficient stock.")
         cursor.close()
         connection.close()
         return
 
+    # Calculate the total amount of the sale
     total = float(price) * quantity
 
+    # Store the sale details in the sales table
     cursor.execute(
         """
         INSERT INTO sales
@@ -81,6 +93,7 @@ def make_sale():
         (customer_id, book_id, quantity, total)
     )
 
+    # Reduce the book quantity after the sale
     cursor.execute(
         """
         UPDATE books
@@ -90,10 +103,13 @@ def make_sale():
         (quantity, book_id)
     )
 
+    # Save the changes to the database
     connection.commit()
 
+    # Get the ID of the newly created sale
     sale_id = cursor.lastrowid
 
+    # Display the bill
     print("\n========== BILL ==========")
     print("Sale ID:", sale_id)
     print("Customer:", customer[0])
@@ -107,7 +123,9 @@ def make_sale():
     connection.close()
 
 
+# Display the history of all sales
 def view_sales():
+    # Connect to the database
     connection = connect_db()
 
     if not connection:
@@ -115,6 +133,7 @@ def view_sales():
 
     cursor = connection.cursor()
 
+    # Retrieve sales along with customer and book details
     query = """
         SELECT
             s.sale_id,
@@ -126,61 +145,4 @@ def view_sales():
         FROM sales s
         LEFT JOIN customers c
             ON s.customer_id = c.customer_id
-        LEFT JOIN books b
-            ON s.book_id = b.book_id
-        ORDER BY s.sale_date DESC
-    """
-
-    cursor.execute(query)
-
-    rows = cursor.fetchall()
-
-    if not rows:
-        print("No sales recorded.")
-
-    else:
-        print("\n" + "-" * 100)
-        print(
-            f"{'Sale ID':<10}"
-            f"{'Customer':<20}"
-            f"{'Book':<25}"
-            f"{'Qty':<8}"
-            f"{'Total':<12}"
-            f"{'Date':<20}"
-        )
-        print("-" * 100)
-
-        for row in rows:
-            print(
-                f"{row[0]:<10}"
-                f"{str(row[1])[:18]:<20}"
-                f"{str(row[2])[:23]:<25}"
-                f"{row[3]:<8}"
-                f"{float(row[4]):<12.2f}"
-                f"{str(row[5]):<20}"
-            )
-
-    cursor.close()
-    connection.close()
-
-
-def sales_menu():
-    while True:
-        print("\n===== SALES & BILLING =====")
-        print("1. Make Sale")
-        print("2. View Sales History")
-        print("3. Back")
-
-        choice = input("Enter choice: ")
-
-        if choice == "1":
-            make_sale()
-
-        elif choice == "2":
-            view_sales()
-
-        elif choice == "3":
-            break
-
-        else:
-            print("Invalid choice.")
+```
