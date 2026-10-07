@@ -4,6 +4,7 @@ from database import connect_db
 
 # Make a new sale and generate the bill
 def make_sale():
+    """Record a new sale and generate the bill."""
     # Connect to the database
     connection = connect_db()
 
